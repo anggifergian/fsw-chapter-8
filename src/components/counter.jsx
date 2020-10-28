@@ -22,8 +22,31 @@ class Pengajar extends Component {
     });
   };
 
+  handlingCounter = () => {
+    const {counters} = this.state;
+    this.setState({
+      counters: counters + 1
+    })
+  }
+
   render() {
-    return <ul>{this.listingPengajars()}</ul>;
+    return (
+      <div>
+        <span className={this.getBadgeColor()}>{this.formatCount()}</span>
+        <button onClick={this.handlingCounter} className="btn btn-secondary">Increment</button>
+      </div>
+    )
+  }
+
+  getBadgeColor = () => {
+    let classes = "mr-2 badge badge-";
+    classes += this.state.counters === 0 ? 'warning' : 'primary';
+    return classes;
+  }
+
+  formatCount = () => {
+    const {counters} = this.state;
+    return counters === 0 ? "Zero" : counters;
   }
 }
 
