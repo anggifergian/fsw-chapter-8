@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Movies from "./components/Movies";
-import Pengajar from "./components/Counter";
+import Movies from "./components/movies";
+import Counters from "./components/counters";
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
             <Movies />
           </div>
           <div className="col-md-6">
-            <Pengajar />
+            <Counters />
           </div>
         </div>
       </div>
