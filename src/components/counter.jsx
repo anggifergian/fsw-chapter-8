@@ -11,7 +11,13 @@ class Counter extends Component {
     return (
       <div className="row align-items-center mb-2">
         <div className="col-1">
-          <span className={this.getBadgeColor()}>{this.formatCount()}</span>
+          <span
+            className={
+              counter.value === 0 ? "badge badge-warning" : "badge badge-primary"
+            }
+          >
+            {counter.value === 0 ? "Zero" : counter.value}
+          </span>
         </div>
         <div className="mr-2">
           <button
@@ -38,17 +44,6 @@ class Counter extends Component {
       </div>
     );
   }
-
-  getBadgeColor = () => {
-    let classes = "badge badge-";
-    classes += this.props.counter.value === 0 ? "warning" : "primary";
-    return classes;
-  };
-
-  formatCount = () => {
-    const { value } = this.props.counter;
-    return value === 0 ? "Zero" : value;
-  };
 }
 
 export default Counter;
