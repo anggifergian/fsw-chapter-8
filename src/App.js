@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import Navbar from "./components/navbar";
-import Movies from "./components/movies";
+import NavBar from "./components/navbar";
+import Movies from "./components/Movies";
+import { Switch, Redirect, Route } from "react-router-dom";
 
 class App extends Component {
   state = {
@@ -43,10 +44,14 @@ class App extends Component {
   render() {
     return (
       <>
-        <Navbar totalNumbers={this.state.counters.filter((c) => c.value > 0).length} />
+        <NavBar />
         <main>
+          {/* <Total totalNumbers={this.state.counters.filter((c) => c.value > 0).length} /> */}
           <div className="container">
-            <Movies />
+            <Switch>
+              <Route path="/movies" component={Movies} />
+              <Redirect from="/" exact to="/movies" />
+            </Switch>
           </div>
         </main>
       </>
