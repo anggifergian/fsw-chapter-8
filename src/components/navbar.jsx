@@ -1,20 +1,30 @@
-const Navbar = (props) => {
+import React from "react";
+import { NavLink, Link } from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
+
+const NavBar = () => {
   return (
-    <nav className="navbar navbar-light bg-light">
+    <Navbar bg="light">
       <div className="container">
-        <div className="navbar-brand mb-0 h1">
-          Totals{" "}
-          <span
-            className={
-              props.totalNumbers === 0 ? "badge badge-warning" : "badge badge-success"
-            }
-          >
-            {props.totalNumbers}
-          </span>
+        <Link to="/">
+          <Navbar.Brand style={{ fontWeight: "bold" }}>conFlix</Navbar.Brand>
+        </Link>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav mr-auto">
+            <NavLink className="nav-item nav-link" to="/movies">
+              Movies
+            </NavLink>
+            <NavLink className="nav-item nav-link" to="/players">
+              Blog
+            </NavLink>
+            <NavLink className="nav-item nav-link" to="/login">
+              Login
+            </NavLink>
+          </ul>
         </div>
       </div>
-    </nav>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavBar;
