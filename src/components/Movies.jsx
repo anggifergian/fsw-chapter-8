@@ -5,6 +5,7 @@ import ListGroup from "./common/list-group";
 import Like from "./common/like";
 import Paging from "./common/pagination";
 import { pagination } from "./utils/pagination";
+import { Link } from "react-router-dom";
 
 class Movies extends Component {
   state = {
@@ -62,6 +63,9 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link to="/movies/create">
+            <button className="btn btn-primary">New Movies</button>
+          </Link>
           <div className="mt-2">
             <p>Showing {filtered.length} movies in the database</p>
           </div>
