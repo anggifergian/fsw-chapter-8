@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 
 class MoviesEdit extends Component {
-  state = {};
+  state = {
+    data: {},
+    errors: {},
+  };
   render() {
-    return <button>Save</button>;
+    return <></>;
   }
 }
 

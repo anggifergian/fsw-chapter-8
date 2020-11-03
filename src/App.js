@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import NavBar from "./components/navbar";
 import Movies from "./components/Movies";
 import { Switch, Redirect, Route } from "react-router-dom";
-import MoviesEdit from "./components/movies-edit";
 import MoviesForm from "./components/movies-form";
 
 class App extends Component {
@@ -52,8 +51,7 @@ class App extends Component {
           <div className="container" style={{ marginTop: 13 }}>
             <Switch>
               <Route path="/movies" exact component={Movies} />
-              <Route path="/movies/edit/:id" component={MoviesEdit} />
-              <Route path="/movies/create" component={MoviesForm} />
+              <Route path="/movies/:id" component={MoviesForm} />
               <Redirect from="/" exact to="/movies" />
             </Switch>
           </div>
