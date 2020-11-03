@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import NavBar from "./components/navbar";
 import Movies from "./components/Movies";
 import { Switch, Redirect, Route } from "react-router-dom";
+import MoviesEdit from "./components/movies-edit";
+import MoviesForm from "./components/movies-form";
 
 class App extends Component {
   state = {
@@ -47,9 +49,11 @@ class App extends Component {
         <NavBar />
         <main>
           {/* <Total totalNumbers={this.state.counters.filter((c) => c.value > 0).length} /> */}
-          <div className="container">
+          <div className="container" style={{ marginTop: 13 }}>
             <Switch>
-              <Route path="/movies" component={Movies} />
+              <Route path="/movies" exact component={Movies} />
+              <Route path="/movies/edit/:id" component={MoviesEdit} />
+              <Route path="/movies/create" component={MoviesForm} />
               <Redirect from="/" exact to="/movies" />
             </Switch>
           </div>
