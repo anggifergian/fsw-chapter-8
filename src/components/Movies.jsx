@@ -55,7 +55,7 @@ class Movies extends Component {
 
     return (
       <div className="row">
-        <div className="col-2">
+        <div className="col-sm-12 col-md-2 mb-3">
           <ListGroup
             genres={this.state.genres}
             onSelectGenre={this.handleSelectGenre}
@@ -63,7 +63,7 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <Link to="/movies/create">
+          <Link to={`/movies/new`}>
             <button className="btn btn-primary">New Movies</button>
           </Link>
           <div className="mt-2">
@@ -98,6 +98,11 @@ class Movies extends Component {
                       >
                         Delete
                       </button>
+                      <Link to={`/movies/${movie._id}`}>
+                        <button className="btn btn-outline-warning btn-sm ml-2">
+                          Edit
+                        </button>
+                      </Link>
                     </td>
                   </tr>
                 );

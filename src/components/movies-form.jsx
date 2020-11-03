@@ -1,22 +1,51 @@
 import React from "react";
 import Joi from "joi";
 import Form from "./common/form";
+import { getGenres } from "../services/fakeGenreService";
+import { getMovie, saveMovie } from "../services/fakeMovieService";
 
 class MoviesForm extends Form {
   state = {
-    data: { title: "", genre: "", stock: "", rate: "" },
+    data: { title: "", genreId: "", numberInStock: "", dailyRentalRate: "" },
     errors: {},
+    genres: [],
   };
 
   schema = {
-    title: Joi.string().min(2).required().label("Title"),
-    genre: Joi.string().required().min(5),
-    stock: Joi.number().required(),
-    rate: Joi.number().required(),
+    _id: Joi.string(),
+    title: Joi.string().required().label("Title"),
+    genreId: Joi.string().required().label("Genre"),
+    numberInStock: Joi.number().required().min(0).max(100).label("Stock"),
+    dailyRentalRate: Joi.number().required().min(0).max(10).label("Rate"),
+  };
+
+  componentDidMount() {
+    const genres = getGenres();
+    this.setState({ genres });
+
+    const movieId = this.props.match.params.id;
+    if (movieId === "new") return;
+
+    const movie = getMovie(movieId);
+    if (!movie) return this.props.history.replace("/not-found");
+
+    this.setState({ data: this.mapToViewModel(movie) });
+  }
+
+  mapToViewModel = (movie) => {
+    return {
+      _id: movie._id,
+      title: movie.title,
+      genreId: movie.genre._id,
+      numberInStock: movie.numberInStock,
+      dailyRentalRate: movie.dailyRentalRate,
+    };
   };
 
   doSubmit = () => {
-    console.log("Submitted");
+    saveMovie(this.state.data);
+
+    this.props.history.push("/movies");
   };
 
   render() {
@@ -24,9 +53,9 @@ class MoviesForm extends Form {
       <>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("title", "Title")}
-          {this.renderInput("genre", "Genre")}
-          {this.renderInput("stock", "Stock")}
-          {this.renderInput("rate", "Rate")}
+          {this.renderSelect("genreId", "Genre", this.state.genres)}
+          {this.renderInput("numberInStock", "Stock")}
+          {this.renderInput("dailyRentalRate", "Rate")}
           {this.renderButton("Submit")}
         </form>
       </>
