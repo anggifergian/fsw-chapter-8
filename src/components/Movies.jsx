@@ -6,6 +6,7 @@ import Like from "./common/like";
 import Paging from "./common/pagination";
 import { pagination } from "./utils/pagination";
 import { Link } from "react-router-dom";
+import Search from "./common/search";
 
 class Movies extends Component {
   state = {
@@ -14,6 +15,7 @@ class Movies extends Component {
     pageSize: 5,
     currentPage: 1,
     selectedGenre: { _id: 0, name: "All Genres" },
+    search: "",
   };
 
   componentDidMount() {
@@ -39,6 +41,13 @@ class Movies extends Component {
 
   handleSelectGenre = (genre) => {
     this.setState({ selectedGenre: genre, currentPage: 1 });
+  };
+
+  handleSearch = ({ currentTarget }) => {
+    const movies = [...this.state.movies];
+    const search = new RegExp(currentTarget.value);
+    const result = movies.filter((m) => m.title.match(search));
+    console.log(result);
   };
 
   render() {
@@ -69,6 +78,7 @@ class Movies extends Component {
           <div className="mt-2">
             <p>Showing {filtered.length} movies in the database</p>
           </div>
+          <Search onSearch={this.handleSearch} />
           <table className="table table-hover">
             <thead>
               <tr>
