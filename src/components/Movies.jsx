@@ -6,6 +6,7 @@ import Like from "./common/like";
 import Paging from "./common/pagination";
 import { pagination } from "./utils/pagination";
 import { Link } from "react-router-dom";
+import Search from "./common/search";
 
 class Movies extends Component {
   state = {
@@ -13,6 +14,7 @@ class Movies extends Component {
     genres: [],
     pageSize: 5,
     currentPage: 1,
+    searchQuery: "",
     selectedGenre: { _id: 0, name: "All Genres" },
   };
 
@@ -38,19 +40,33 @@ class Movies extends Component {
   };
 
   handleSelectGenre = (genre) => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+  };
+
+  handleSearch = (query) => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   };
 
   render() {
     const { length: count } = this.state.movies;
-    const { pageSize, currentPage, movies: allMovies, selectedGenre } = this.state;
+    const {
+      pageSize,
+      currentPage,
+      movies: allMovies,
+      selectedGenre,
+      searchQuery,
+    } = this.state;
 
     if (count === 0) return <p>There are no movie in the database.</p>;
 
-    const filtered =
-      selectedGenre && selectedGenre._id !== 0
-        ? allMovies.filter((movie) => movie.genre._id === selectedGenre._id)
-        : allMovies;
+    let filtered = allMovies;
+    if (searchQuery)
+      filtered = allMovies.filter((m) =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id !== 0)
+      filtered = allMovies.filter((movie) => movie.genre._id === selectedGenre._id);
+
     const movies = pagination(filtered, currentPage, pageSize);
 
     return (
@@ -69,6 +85,7 @@ class Movies extends Component {
           <div className="mt-2">
             <p>Showing {filtered.length} movies in the database</p>
           </div>
+          <Search onSearch={this.handleSearch} />
           <table className="table table-hover">
             <thead>
               <tr>
