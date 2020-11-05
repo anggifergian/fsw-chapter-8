@@ -14,8 +14,8 @@ class Movies extends Component {
     genres: [],
     pageSize: 5,
     currentPage: 1,
+    searchQuery: "",
     selectedGenre: { _id: 0, name: "All Genres" },
-    search: "",
   };
 
   componentDidMount() {
@@ -40,26 +40,33 @@ class Movies extends Component {
   };
 
   handleSelectGenre = (genre) => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
   };
 
-  handleSearch = ({ currentTarget }) => {
-    const movies = [...this.state.movies];
-    const search = new RegExp(currentTarget.value);
-    const result = movies.filter((m) => m.title.match(search));
-    console.log(result);
+  handleSearch = (query) => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   };
 
   render() {
     const { length: count } = this.state.movies;
-    const { pageSize, currentPage, movies: allMovies, selectedGenre } = this.state;
+    const {
+      pageSize,
+      currentPage,
+      movies: allMovies,
+      selectedGenre,
+      searchQuery,
+    } = this.state;
 
     if (count === 0) return <p>There are no movie in the database.</p>;
 
-    const filtered =
-      selectedGenre && selectedGenre._id !== 0
-        ? allMovies.filter((movie) => movie.genre._id === selectedGenre._id)
-        : allMovies;
+    let filtered = allMovies;
+    if (searchQuery)
+      filtered = allMovies.filter((m) =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id !== 0)
+      filtered = allMovies.filter((movie) => movie.genre._id === selectedGenre._id);
+
     const movies = pagination(filtered, currentPage, pageSize);
 
     return (

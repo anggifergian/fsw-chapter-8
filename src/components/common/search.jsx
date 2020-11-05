@@ -2,14 +2,12 @@ import React from "react";
 
 const Search = ({ onSearch }) => {
   return (
-    <div className="mb-3">
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Search..."
-        onChange={onSearch}
-      />
-    </div>
+    <input
+      type="text"
+      className="form-control my-3"
+      placeholder="Search..."
+      onChange={(e) => onSearch(e.currentTarget.value)}
+    />
   );
 };
 
