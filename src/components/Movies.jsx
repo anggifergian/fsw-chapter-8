@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
 import ListGroup from "./common/list-group";
-import Like from "./common/like";
 import Paging from "./common/pagination";
 import { pagination } from "./utils/pagination";
 import { Link } from "react-router-dom";
 import Search from "./common/search";
+import MoviesTable from "./moviesTable";
+import * as _ from "lodash";
 
 class Movies extends Component {
   state = {
@@ -16,6 +17,7 @@ class Movies extends Component {
     currentPage: 1,
     searchQuery: "",
     selectedGenre: { _id: 0, name: "All Genres" },
+    sortPath: { sort: "title", order: "asc" },
   };
 
   componentDidMount() {
@@ -23,7 +25,7 @@ class Movies extends Component {
     this.setState({ movies: getMovies(), genres });
   }
 
-  deleteMovies = (movie) => {
+  handleDelete = (movie) => {
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
   };
@@ -47,6 +49,10 @@ class Movies extends Component {
     this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   };
 
+  handleSort = (sortPath) => {
+    this.setState({ sortPath });
+  };
+
   render() {
     const { length: count } = this.state.movies;
     const {
@@ -55,6 +61,7 @@ class Movies extends Component {
       movies: allMovies,
       selectedGenre,
       searchQuery,
+      sortPath,
     } = this.state;
 
     if (count === 0) return <p>There are no movie in the database.</p>;
@@ -67,7 +74,9 @@ class Movies extends Component {
     else if (selectedGenre && selectedGenre._id !== 0)
       filtered = allMovies.filter((movie) => movie.genre._id === selectedGenre._id);
 
-    const movies = pagination(filtered, currentPage, pageSize);
+    const sorted = _.orderBy(filtered, sortPath.sort, sortPath.order);
+
+    const movies = pagination(sorted, currentPage, pageSize);
 
     return (
       <div className="row">
@@ -86,46 +95,13 @@ class Movies extends Component {
             <p>Showing {filtered.length} movies in the database</p>
           </div>
           <Search onSearch={this.handleSearch} />
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Genre</th>
-                <th>Stock</th>
-                <th>Rate</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {movies.map((movie) => {
-                return (
-                  <tr key={movie._id}>
-                    <td>{movie.title}</td>
-                    <td>{movie.genre.name}</td>
-                    <td>{movie.numberInStock}</td>
-                    <td>{movie.dailyRentalRate}</td>
-                    <td>
-                      <Like liked={movie.liked} onLiked={() => this.handleLike(movie)} />
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => this.deleteMovies(movie)}
-                        className="btn btn-outline-danger btn-sm"
-                      >
-                        Delete
-                      </button>
-                      <Link to={`/movies/${movie._id}`}>
-                        <button className="btn btn-outline-warning btn-sm ml-2">
-                          Edit
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <MoviesTable
+            movies={movies}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+            onSort={this.handleSort}
+            sortPath={sortPath}
+          />
           <Paging
             totalNumbers={filtered.length}
             pageSize={pageSize}
