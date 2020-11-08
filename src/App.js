@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import NavBar from "./components/navbar";
 import Movies from "./components/Movies";
 import { Switch, Redirect, Route } from "react-router-dom";
-import MoviesForm from "./components/movies-form";
+import MoviesForm from "./components/moviesForm";
 
 class App extends Component {
   state = {
