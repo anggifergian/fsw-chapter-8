@@ -53,8 +53,7 @@ class Movies extends Component {
     this.setState({ sortPath });
   };
 
-  render() {
-    const { length: count } = this.state.movies;
+  getPageItem = () => {
     const {
       pageSize,
       currentPage,
@@ -64,23 +63,37 @@ class Movies extends Component {
       sortPath,
     } = this.state;
 
-    if (count === 0) return <p>There are no movie in the database.</p>;
-
+    // Initial data
     let filtered = allMovies;
+    // Searching
     if (searchQuery)
       filtered = allMovies.filter((m) =>
         m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
+    // Filtering
     else if (selectedGenre && selectedGenre._id !== 0)
-      filtered = allMovies.filter((movie) => movie.genre._id === selectedGenre._id);
-
+      filtered = allMovies.filter(
+        (movie) => movie.genre._id === selectedGenre._id
+      );
+    // Sorting
     const sorted = _.orderBy(filtered, sortPath.sort, sortPath.order);
-
+    // Paginating
     const movies = pagination(sorted, currentPage, pageSize);
+
+    return { data: movies, length: filtered.length };
+  };
+
+  render() {
+    const { length: count } = this.state.movies;
+    const { pageSize, currentPage, sortPath } = this.state;
+
+    if (count === 0) return <p>There are no movie in the database.</p>;
+
+    const { data: movies, length } = this.getPageItem();
 
     return (
       <div className="row">
-        <div className="col-sm-12 col-md-2 mb-3">
+        <div className="col-sm-12 col-md-3 mb-3">
           <ListGroup
             genres={this.state.genres}
             onSelectGenre={this.handleSelectGenre}
@@ -92,7 +105,7 @@ class Movies extends Component {
             <button className="btn btn-primary">New Movies</button>
           </Link>
           <div className="mt-2">
-            <p>Showing {filtered.length} movies in the database</p>
+            <p>Showing {length} movies in the database</p>
           </div>
           <Search onSearch={this.handleSearch} />
           <MoviesTable
@@ -103,7 +116,7 @@ class Movies extends Component {
             sortPath={sortPath}
           />
           <Paging
-            totalNumbers={filtered.length}
+            totalNumbers={length}
             pageSize={pageSize}
             currentPage={currentPage}
             onChangePage={this.handleChangePage}
