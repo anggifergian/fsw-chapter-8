@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Search from "./common/search";
 import MoviesTable from "./moviesTable";
 import * as _ from "lodash";
+import axios from "axios";
 
 class Movies extends Component {
   state = {
@@ -20,9 +21,12 @@ class Movies extends Component {
     sortPath: { sort: "title", order: "asc" },
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const genres = [{ _id: 0, name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
+
+    const data = await axios.get("https://jsonplaceholder.typicode.com/users");
+    console.log(data);
   }
 
   handleDelete = (movie) => {
