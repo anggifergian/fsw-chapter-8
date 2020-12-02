@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { Switch, Redirect, Route } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import NavBar from "./components/navbar";
 import Movies from "./components/Movies";
-import { Switch, Redirect, Route } from "react-router-dom";
 import MoviesForm from "./components/moviesForm";
+import Login from "./components/login";
 
 class App extends Component {
   state = {
@@ -13,24 +15,19 @@ class App extends Component {
     ],
   };
 
-  handleIncrement = (counter) => {
-    const counters = [...this.state.counters];
-    const index = counters.indexOf(counter);
-    counters[index] = { ...counter };
-    counters[index].value++;
-    this.setState({ counters });
-  };
-
-  handleDecrement = (counter) => {
-    const counters = [...this.state.counters];
-    const index = counters.indexOf(counter);
-    counters[index] = { ...counter };
-    counters[index].value--;
-    this.setState({ counters });
-  };
+  componentDidMount() {
+    try {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      this.setState({ user });
+      this.panggilData();
+    } catch (ex) {}
+  }
 
   handleDelete = (counterId) => {
-    const counters = this.state.counters.filter((counter) => counter.id !== counterId);
+    const counters = this.state.counters.filter(
+      (counter) => counter.id !== counterId
+    );
     this.setState({ counters });
   };
 
@@ -45,14 +42,15 @@ class App extends Component {
   render() {
     return (
       <>
-        <NavBar />
+        <NavBar user={this.state.user} />
         <main>
           {/* <Total totalNumbers={this.state.counters.filter((c) => c.value > 0).length} /> */}
-          <div className="container" style={{ marginTop: 13 }}>
+          <div className='container' style={{ marginTop: 13 }}>
             <Switch>
-              <Route path="/movies" exact component={Movies} />
-              <Route path="/movies/:id" component={MoviesForm} />
-              <Redirect from="/" exact to="/movies" />
+              <Route path='/movies' exact component={Movies} />
+              <Route path='/movies/:id' component={MoviesForm} />
+              <Route path='/login' component={Login} />
+              <Redirect from='/' exact to='/movies' />
             </Switch>
           </div>
         </main>

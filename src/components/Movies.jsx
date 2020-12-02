@@ -7,8 +7,8 @@ import { pagination } from "./utils/pagination";
 import { Link } from "react-router-dom";
 import Search from "./common/search";
 import MoviesTable from "./moviesTable";
+import http from "../services/httpServices";
 import * as _ from "lodash";
-import axios from "axios";
 
 class Movies extends Component {
   state = {
@@ -25,8 +25,8 @@ class Movies extends Component {
     const genres = [{ _id: 0, name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
 
-    const data = await axios.get("https://jsonplaceholder.typicode.com/users");
-    console.log(data);
+    const data = await http.get("https://jsonplaceholder.typicode.com/users");
+    console.log("Berhasil: ", data.data);
   }
 
   handleDelete = (movie) => {
@@ -96,19 +96,19 @@ class Movies extends Component {
     const { data: movies, length } = this.getPageItem();
 
     return (
-      <div className="row">
-        <div className="col-sm-12 col-md-3 mb-3">
+      <div className='row'>
+        <div className='col-sm-12 col-md-3 mb-3'>
           <ListGroup
             genres={this.state.genres}
             onSelectGenre={this.handleSelectGenre}
             selectedGenre={this.state.selectedGenre}
           />
         </div>
-        <div className="col">
+        <div className='col'>
           <Link to={`/movies/new`}>
-            <button className="btn btn-primary">New Movies</button>
+            <button className='btn btn-primary'>New Movies</button>
           </Link>
-          <div className="mt-2">
+          <div className='mt-2'>
             <p>Showing {length} movies in the database</p>
           </div>
           <Search onSearch={this.handleSearch} />
