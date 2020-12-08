@@ -5,16 +5,14 @@ import { Post } from '../components/Post'
 
 const PostsPage = ({ dispatch, loading, posts, isErrors }) => {
   useEffect(() => {
-    console.log('mount')
     dispatch(fetchPosts())
   }, [dispatch])
 
   const renderPosts = () => {
-    console.log('render')
     if (loading) return <p>Loading posts...</p>
     if (isErrors) return <p>Unable to display posts.</p>
-    return <h1>Hello World</h1>
-    // return posts.map((post) => <Post key={post.id} post={post} />)
+    // return <h1>Hello World</h1>
+    return posts.map((post) => <Post key={post.id} post={post} />)
   }
 
   return (
