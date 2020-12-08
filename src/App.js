@@ -8,6 +8,8 @@ import NavBar from './components/navbar'
 import Movies from './components/Movies'
 import MoviesForm from './components/moviesForm'
 import Login from './components/login'
+import PostsPage from './pages/PostsPage'
+import DashboardPage from './pages/DashboardPage'
 
 class App extends Component {
   state = {}
@@ -21,7 +23,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('User: ', this.state.user)
     return (
       <>
         <NavBar user={this.state.user} />
@@ -31,7 +32,9 @@ class App extends Component {
               <Route path="/movies" exact component={Movies} />
               <Route path="/movies/:id" component={MoviesForm} />
               <Route path="/login" component={Login} />
-              <Redirect from="/" exact to="/movies" />
+              <Redirect from="/" exact to="/home" />
+              <Route exact path="/home" component={DashboardPage} />
+              <Route exact path="/posts" component={PostsPage} />
             </Switch>
           </div>
         </main>

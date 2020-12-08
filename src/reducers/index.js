@@ -5,6 +5,4 @@ const rootReducer = combineReducers({
   posts: postsReducer,
 })
 
-console.log('rootReducer: ', rootReducer)
-
 export default rootReducer
